@@ -3,6 +3,7 @@
 This document provides a high-level overview and comparison between **Version 3.13 (Scaled Edition)** and **Version 4.30 (Data Lake Edition)** of the LINE Clone project. These two versions represent distinct architectural philosophies for solving the challenges of real-time communication at scale.
 
 ## 🚀 Version 3.13: The "Scale-Out" Architecture
+<img src="v3.13/chat.jpeg" width="66%" alt="Alt text">
 
 **Goal:** Handle high concurrency (1000+ simultaneous users) and minimize message delivery latency.
 
@@ -23,9 +24,10 @@ This document provides a high-level overview and comparison between **Version 3.
 | 📈 **High Concurrency:** Handles thousands of active connections easily. | 💾 **Database Bloat:** PostgreSQL stores *everything*, eventually becoming a bottleneck. |
 | 🛠️ **Simpler Retrieval:** Standard SQL queries for chat history. |  |
 
-**[View Version 3 Documentation](https://www.google.com/search?q=README_v3.md)**
+**[View Version 3 Documentation](v3.13/README.md)**
 
 ## 🧊 Version 4.30: The "Data Lake" Architecture
+<img src="v4.29/version4_29.png" width="66%" alt="Alt text">
 
 **Goal:** Infinite message retention, massive storage scale (1 Million+ messages), and cost efficiency.
 
@@ -50,7 +52,7 @@ This document provides a high-level overview and comparison between **Version 3.
 | 💰 **Cost Efficient:** Relational DB stays tiny and cheap. | 🧩 **High Complexity:** Requires managing an ETL pipeline, Wasm assets, and file partitions. |
 | 🛡️ **Analytics Ready:** Data is already in columnar format for analysis. |  |
 
-**[View Version 4 Documentation](https://www.google.com/search?q=README_v4.md)** *(Note: Refer to v4 setup scripts for details)*
+**[View Version 4 Documentation](v4.29/README.md)** *(Note: Refer to v4 setup scripts for details)*
 
 ## 🏆 Which Version Should You Use?
 

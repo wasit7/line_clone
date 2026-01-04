@@ -1,5 +1,7 @@
 # 🚀 LINE Clone v3.13 - Scaled Performance Edition
 
+<img src="stress_test.jpeg" width="66%" alt="Alt text">
+
 **A high-concurrency, real-time chat application engineered to handle "Thundering Herd" scenarios.**
 
 This version introduces a **Write-Behind Architecture**, decoupling real-time messaging from database I/O to support 1000+ concurrent users with sub-millisecond latency. It features a modern Tailwind UI, WebRTC video calling, and a robust Docker-based microservices infrastructure.

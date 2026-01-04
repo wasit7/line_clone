@@ -1,5 +1,7 @@
 # 🧊 LINE Clone v4.30 - Platinum Data Lake Edition
 
+<img src="version4_29.png" width="66%" alt="Alt text">
+
 **A "Zero-DB" architecture engineered for infinite retention and massive scale.**
 
 Version 4.30 represents a paradigm shift from a traditional web application to a **Data Lakehouse Architecture**. Instead of relying on a monolithic database for history, it utilizes a tiered storage model (Redis → Postgres → Parquet/S3) and moves the compute layer to the client using **DuckDB-Wasm**. This allows for the storage of millions of messages at a fraction of the cost of a relational database, with analytics performed directly in the user's browser.
