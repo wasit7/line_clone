@@ -3,7 +3,7 @@
 This document provides a high-level overview and comparison between **Version 3.13 (Scaled Edition)** and **Version 4.30 (Data Lake Edition)** of the LINE Clone project. These two versions represent distinct architectural philosophies for solving the challenges of real-time communication at scale.
 
 ## 🚀 Version 3.13: The "Scale-Out" Architecture
-<img src="v3.13/chat.jpeg" width="66%" alt="Alt text">
+<img src="v3.13/chat.jpeg" width="33%" alt="Alt text">
 
 **Goal:** Handle high concurrency (1000+ simultaneous users) and minimize message delivery latency.
 
