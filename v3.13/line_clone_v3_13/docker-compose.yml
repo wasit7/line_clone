@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # Load Balancer
+  nginx:
+    build: ./nginx
+    container_name: line_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - web
+
+  # Web Server (Scaled x5 for Auth Throughput)
+  web:
+    build: ./app
+    # Boot: Wait DB -> Migrate -> Create Admin -> Start Daphne
+    command: >
+      sh -c "echo '⏳ Waiting for Database...' &&
+             while ! nc -z db 5432; do sleep 1; done &&
+             echo '✅ DB started. Running migrations...' &&
+             python manage.py makemigrations chat_app &&
+             python manage.py migrate &&
+             echo '👤 Ensuring Admin User exists...' &&
+             echo \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'password')\" | python manage.py shell &&
+             echo '🚀 Starting Daphne...' &&
+             daphne -b 0.0.0.0 -p 8000 line_project.asgi:application"
+    volumes:
+      - ./app:/app
+    depends_on:
+      - db
+      - redis
+    deploy:
+      replicas: 5
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=prod-v3-13-scaled-secret
+      - POSTGRES_DB=line_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=db
+      - ALLOWED_HOSTS=*
+      - REDIS_HOST=redis
+      # We rely on settings.py Middleware for CSRF
+
+  # Background Worker (Scaled x2 for DB Writes)
+  worker:
+    build: ./app
+    command: python manage.py run_chat_worker
+    volumes:
+      - ./app:/app
+    depends_on:
+      - db
+      - redis
+    deploy:
+      replicas: 2
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=prod-v3-13-scaled-secret
+      - POSTGRES_DB=line_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST=db
+      - REDIS_HOST=redis
+
+  db:
+    image: postgres:15-alpine
+    container_name: line_db
+    environment:
+      POSTGRES_DB: line_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_MAX_CONNECTIONS: 1000 # Increased for 1000 users + 5 replicas
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: line_redis
+
+volumes:
+  postgres_data:
